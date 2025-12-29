@@ -1,0 +1,41 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnp.*
+
+# Build / output
+dist/
+build/
+.next/
+out/
+coverage/
+*.tgz
+
+# Env files
+.env*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Misc
+*.local
+*.sqlite
+*.sqlite3
+uploads/
+.env.local
+.env.*.local
