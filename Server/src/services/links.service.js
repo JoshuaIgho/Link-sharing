@@ -20,7 +20,7 @@ const getLinks = async (userId) => {
 };
 
 const createLink = async (userId, data) => {
-  const { title, url, description } = data;
+  const { title, url, description, platformIcon, platformColor, platform } = data;
 
   const profile = await prisma.profile.findUnique({
     where: { userId },
@@ -42,15 +42,25 @@ const createLink = async (userId, data) => {
       title,
       url,
       description,
+      platformIcon,      // Save Font Awesome icon class
+      platformColor,     // Save platform color
+      platform,          // Save platform ID
       position: maxPosition + 1,
     },
+  });
+
+  console.log('✅ Link created with platform data:', {
+    id: link.id,
+    platformIcon,
+    platformColor,
+    platform
   });
 
   return link;
 };
 
 const updateLink = async (userId, linkId, data) => {
-  const { title, url, description, isActive } = data;
+  const { title, url, description, isActive, platformIcon, platformColor, platform } = data;
 
   // Verify ownership
   const link = await prisma.link.findUnique({
@@ -73,6 +83,9 @@ const updateLink = async (userId, linkId, data) => {
       ...(url && { url }),
       ...(description !== undefined && { description }),
       ...(isActive !== undefined && { isActive }),
+      ...(platformIcon !== undefined && { platformIcon }),
+      ...(platformColor !== undefined && { platformColor }),
+      ...(platform !== undefined && { platform }),
     },
   });
 
@@ -161,10 +174,15 @@ const uploadLinkIcon = async (userId, linkId, file) => {
     ],
   });
 
-  // Update link
+  // Update link - clear platform icon when custom icon is uploaded
   const updatedLink = await prisma.link.update({
     where: { id: linkId },
-    data: { iconUrl: result.secure_url },
+    data: { 
+      iconUrl: result.secure_url,
+      platformIcon: null,  // Clear platform icon
+      platformColor: null, // Clear platform color
+      platform: null,      // Clear platform
+    },
   });
 
   return updatedLink;

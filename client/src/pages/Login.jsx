@@ -1,9 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoginForm from '../components/auth/LoginForm';
+import Head from './Head'; 
+
 
 const Login = () => {
   return (
+    <>
+          <Head />
+
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-purple-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
@@ -21,6 +26,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

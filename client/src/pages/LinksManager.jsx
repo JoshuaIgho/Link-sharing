@@ -42,52 +42,65 @@ const LinksManager = () => {
     setEditingLink(null);
   };
 
-  const handleSubmit = async (formData) => {
-    setFormLoading(true);
-    try {
-      if (editingLink) {
-        // Update existing link
-        const updatedLink = await linksService.updateLink(editingLink.id, {
-          title: formData.title,
-          url: formData.url,
-          description: formData.description,
-        });
+const handleSubmit = async (formData) => {
+  setFormLoading(true);
+  try {
+    if (editingLink) {
+      // Update existing link
+      const updateData = {
+        title: formData.title,
+        url: formData.url,
+        description: formData.description,
+        platformIcon: formData.platformIcon,
+        platformColor: formData.platformColor,
+        platform: formData.platform,
+      };
 
-        // Upload icon if provided
-        if (formData.iconFile) {
-          const linkWithIcon = await linksService.uploadIcon(editingLink.id, formData.iconFile);
-          updateLinkInContext(editingLink.id, linkWithIcon);
-        } else {
-          updateLinkInContext(editingLink.id, updatedLink);
-        }
+      console.log('📝 Updating link with data:', updateData);
+      const updatedLink = await linksService.updateLink(editingLink.id, updateData);
 
-        toast.success('Link updated successfully');
+      // Upload icon if provided
+      if (formData.iconFile) {
+        const linkWithIcon = await linksService.uploadIcon(editingLink.id, formData.iconFile);
+        updateLinkInContext(editingLink.id, linkWithIcon);
       } else {
-        // Create new link
-        const newLink = await linksService.createLink({
-          title: formData.title,
-          url: formData.url,
-          description: formData.description,
-        });
-
-        // Upload icon if provided
-        if (formData.iconFile) {
-          const linkWithIcon = await linksService.uploadIcon(newLink.id, formData.iconFile);
-          addLink(linkWithIcon);
-        } else {
-          addLink(newLink);
-        }
-
-        toast.success('Link created successfully');
+        updateLinkInContext(editingLink.id, updatedLink);
       }
 
-      handleCloseModal();
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save link');
-    } finally {
-      setFormLoading(false);
+      toast.success('Link updated successfully');
+    } else {
+      // Create new link
+      const createData = {
+        title: formData.title,
+        url: formData.url,
+        description: formData.description,
+        platformIcon: formData.platformIcon,
+        platformColor: formData.platformColor,
+        platform: formData.platform,
+      };
+
+      console.log('➕ Creating link with data:', createData);
+      const newLink = await linksService.createLink(createData);
+
+      // Upload icon if provided
+      if (formData.iconFile) {
+        const linkWithIcon = await linksService.uploadIcon(newLink.id, formData.iconFile);
+        addLink(linkWithIcon);
+      } else {
+        addLink(newLink);
+      }
+
+      toast.success('Link created successfully');
     }
-  };
+
+    handleCloseModal();
+  } catch (error) {
+    console.error('❌ Error saving link:', error);
+    toast.error(error.response?.data?.message || 'Failed to save link');
+  } finally {
+    setFormLoading(false);
+  }
+};
 
   const handleReorder = async (linkId, newPosition) => {
     try {

@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Link, ExternalLink, Zap, BarChart3, Palette, ArrowRight, Check, Star, Users, TrendingUp, Shield, Sparkles, Eye, MousePointerClick, Menu, X, Globe, Clock, Smartphone } from 'lucide-react';
 
 const Landing = () => {
+  const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDemoLink, setActiveDemoLink] = useState(0);
   const [stats, setStats] = useState({ users: 0, links: 0, clicks: 0 });
+  const scrollPositionRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -39,6 +42,40 @@ const Landing = () => {
     }, 2000);
     return () => clearInterval(demoInterval);
   }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      scrollPositionRef.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPositionRef.current}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPositionRef.current);
+    }
+  }, [mobileMenuOpen]);
+
+  const handleGetStarted = () => {
+    navigate('/register');
+  };
+
+  const handleSignIn = () => {
+    navigate('/login');
+  };
+
+  const scrollToSection = (sectionId) => {
+    setMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const features = [
     {
@@ -106,7 +143,6 @@ const Landing = () => {
       content: 'Beautiful, fast, and easy to use. My followers love the clean design. Highly recommend!',
       rating: 5
     },
-   
     {
       name: 'Lisa Thompson',
       role: 'Podcaster',
@@ -114,17 +150,14 @@ const Landing = () => {
       content: 'My listeners can now find all my episodes, sponsors, and social links in one place. Game changer!',
       rating: 5
     },
-     {
+    {
       name: 'David Kim',
       role: 'Digital Marketer',
       image: '👨‍💼',
       content: 'Best link-in-bio tool I\'ve used. The customization options are endless and the support is amazing.',
       rating: 5
     }
-  
   ];
-
-
 
   const faqs = [
     {
@@ -147,10 +180,7 @@ const Landing = () => {
       question: 'Is LinkShare mobile-friendly?',
       answer: 'Yes! All LinkShare pages are fully responsive and optimized for mobile devices.'
     },
-    {
-      question: 'Can I cancel anytime?',
-      answer: 'Yes, you can cancel your Pro subscription at any time. No questions asked, no long-term commitment.'
-    },
+   
   ];
 
   const useCases = [
@@ -181,38 +211,48 @@ const Landing = () => {
       </div>
 
       {/* Sticky Header */}
-      <header 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrollY > 50 ? 'bg-white/95 backdrop-blur-lg shadow-lg' : 'bg-transparent'
-        }`}
-      >
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-white shadow-lg' : 'bg-white shadow-lg'}`}>
         <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <RouterLink to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
                 <Link size={16} className="sm:w-5 sm:h-5 text-white" />
               </div>
               <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
                 LinkShare
               </h1>
-            </div>
+            </RouterLink>
             
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-6">
-              <a href="#features" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
+              >
                 Features
-              </a>
-              <a href="#testimonials" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+              </button>
+              <button 
+                onClick={() => scrollToSection('testimonials')}
+                className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
+              >
                 Testimonials
-              </a>
-             
-              <a href="#faq" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+              </button>
+              <button 
+                onClick={() => scrollToSection('faq')}
+                className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
+              >
                 FAQ
-              </a>
-              <button className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+              </button>
+              <button 
+                onClick={handleSignIn}
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
                 Sign In
               </button>
-              <button className="px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 text-sm sm:text-base">
+              <button 
+                onClick={handleGetStarted}
+                className="px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 text-sm sm:text-base"
+              >
                 Get Started
               </button>
             </div>
@@ -251,7 +291,7 @@ const Landing = () => {
                   
                   {/* Menu Items */}
                   <div className="flex-1 px-4 py-6 flex flex-col gap-1">
-                    <a href="#features" className="py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                      <a href="#features" className="py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       Features
                     </a>
                     <a href="#testimonials" className="py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors" onClick={() => setMobileMenuOpen(false)}>
@@ -260,14 +300,20 @@ const Landing = () => {
                     <a href="#faq" className="py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       FAQ
                     </a>
-                    <button className="py-3 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-left transition-colors">
+                    <button 
+                      onClick={handleSignIn}
+                      className="py-3 px-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-left transition-colors"
+                    >
                       Sign In
                     </button>
                   </div>
                   
                   {/* Bottom CTA */}
                   <div className="p-4 border-t">
-                    <button className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                    <button 
+                      onClick={handleGetStarted}
+                      className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                    >
                       Get Started
                     </button>
                   </div>
@@ -300,12 +346,12 @@ const Landing = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 px-4">
-            <button className="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+            <button 
+              onClick={handleGetStarted}
+              className="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2"
+            >
               Start Free Today
               <ArrowRight size={18} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-gray-800 rounded-xl font-bold text-base sm:text-lg hover:shadow-xl transition-all duration-200 border-2 border-gray-200">
-              View Demo
             </button>
           </div>
 
@@ -412,8 +458,6 @@ const Landing = () => {
         </div>
       </section>
 
-    
-
       {/* Use Cases Section */}
       <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-20">
         <div className="text-center mb-12 sm:mb-16">
@@ -474,7 +518,8 @@ const Landing = () => {
         </div>
       </section>
 
- <section id="testimonials" className="container mx-auto px-6 py-20 bg-gradient-to-b from-primary-50 to-white rounded-3xl">
+      {/* Testimonials Section */}
+      <section id="testimonials" className="container mx-auto px-6 py-20 bg-gradient-to-b from-primary-50 to-white rounded-3xl">
         <div className="text-center mb-16">
           <div className="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold mb-4">
             Testimonials
@@ -488,8 +533,7 @@ const Landing = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <div
+          {testimonials.map((testimonial, index) => (<div
               key={index}
               className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
             >
@@ -511,30 +555,58 @@ const Landing = () => {
             </div>
           ))}
         </div>
-      </section>     
-
-      {/* Final CTA */}
-      <section className="container mx-auto px-6 py-20">
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 via-primary-900 to-blue-900 rounded-3xl p-16 text-center text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-blue-600/20 animate-pulse" />
-          <div className="relative z-10">
-            <h3 className="text-5xl font-black mb-6">
-              Ready to Stand Out?
-            </h3>
-            <p className="text-2xl mb-10 text-primary-100">
-              Join 50,000+ creators who've already transformed their online presence
-            </p>
-            <button className="px-12 py-5 bg-white text-gray-900 rounded-xl font-black text-xl hover:shadow-2xl hover:scale-105 transition-all duration-200">
-              Create Your Free Account
-            </button>
-            <p className="mt-6 text-primary-200">No credit card required • Setup in 60 seconds</p>
-          </div>
-        </div>
       </section>
-
-      
+  {/* FAQ Section */}
+  <section id="faq" className="container mx-auto px-6 py-20">
+    <div className="text-center mb-16">
+      <div className="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold mb-4">
+        FAQ
+      </div>
+      <h3 className="text-5xl font-black text-gray-900 mb-4">
+        Frequently Asked Questions
+      </h3>
+      <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        Everything you need to know about LinkShare
+      </p>
     </div>
-  );
-};
 
+    <div className="max-w-3xl mx-auto space-y-4">
+      {faqs.map((faq, index) => (
+        <div
+          key={index}
+          className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
+        >
+          <h4 className="text-lg font-bold text-gray-900 mb-3">{faq.question}</h4>
+          <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* Final CTA */}
+  <section className="container mx-auto px-6 py-20">
+    <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 via-primary-900 to-blue-900 rounded-3xl p-16 text-center text-white shadow-2xl relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-blue-600/20 animate-pulse" />
+      <div className="relative z-10">
+        <h3 className="text-5xl font-black mb-6">
+          Ready to Stand Out?
+        </h3>
+        <p className="text-2xl mb-10 text-primary-100">
+          Join 50,000+ creators who've already transformed their online presence
+        </p>
+        <button 
+          onClick={handleGetStarted}
+          className="px-12 py-5 bg-white text-gray-900 rounded-xl font-black text-xl hover:shadow-2xl hover:scale-105 transition-all duration-200"
+        >
+          Create Your Free Account
+        </button>
+        <p className="mt-6 text-primary-200">No credit card required • Setup in 60 seconds</p>
+      </div>
+    </div>
+  </section>
+
+  
+</div>
+);
+};
 export default Landing;

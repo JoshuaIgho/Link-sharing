@@ -19,6 +19,41 @@ const LinkItem = ({ link, onEdit, onDelete, onToggle }) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Render icon - priority: custom icon > platform icon > default
+  const renderIcon = () => {
+    if (link.iconUrl) {
+      return (
+        <img
+          src={link.iconUrl}
+          alt={link.title}
+          className="w-12 h-12 rounded-lg object-cover"
+        />
+      );
+    }
+    
+    if (link.platformIcon) {
+      return (
+        <div
+          className="w-12 h-12 rounded-lg flex items-center justify-center"
+          style={{
+            backgroundColor: `${link.platformColor}15`,
+          }}
+        >
+          <i 
+            className={`${link.platformIcon} text-2xl`} 
+            style={{ color: link.platformColor }}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
+        <ExternalLink size={20} className="text-gray-400" />
+      </div>
+    );
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -35,17 +70,7 @@ const LinkItem = ({ link, onEdit, onDelete, onToggle }) => {
       </button>
 
       {/* Link Icon */}
-      {link.iconUrl ? (
-        <img
-          src={link.iconUrl}
-          alt={link.title}
-          className="w-12 h-12 rounded-lg object-cover"
-        />
-      ) : (
-        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-          <ExternalLink size={20} className="text-gray-400" />
-        </div>
-      )}
+      {renderIcon()}
 
       {/* Link Info */}
       <div className="flex-1 min-w-0">

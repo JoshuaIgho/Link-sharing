@@ -8,46 +8,45 @@ const PublicLinkCard = ({ link, themeColor, onClick, style }) => {
   };
 
   // Use platform icon if available, otherwise use uploaded icon or default
-  const renderIcon = () => {
-    if (link.iconUrl) {
-      return (
-        <img
-          src={link.iconUrl}
-          alt={link.title}
-          className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
-        />
-      );
-    }
-    
-    if (link.platformIcon) {
-      return (
-        <div
-          className="w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{
-            backgroundColor: `${link.platformColor}15`,
-          }}
-        >
-          <i 
-            className={`${link.platformIcon} text-2xl`} 
-            style={{ color: link.platformColor }}
-          />
-        </div>
-      );
-    }
-
+const renderIcon = () => {
+  if (link.iconUrl) {
+    return (
+      <img
+        src={link.iconUrl}
+        alt={link.title}
+        className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+      />
+    );
+  }
+  
+  if (link.platformIcon) {
     return (
       <div
         className="w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0"
         style={{
-          backgroundColor: `${themeColor}15`,
-          color: themeColor,
+          backgroundColor: `${link.platformColor}15`,
         }}
       >
-        <ExternalLink size={24} />
+        <i 
+          className={`${link.platformIcon} text-2xl`} 
+          style={{ color: link.platformColor }}
+        />
       </div>
     );
-  };
+  }
 
+  return (
+    <div
+      className="w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0"
+      style={{
+        backgroundColor: `${themeColor}15`,
+        color: themeColor,
+      }}
+    >
+      <ExternalLink size={24} />
+    </div>
+  );
+};
   return (
     <button
       onClick={handleClick}

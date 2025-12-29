@@ -1,0 +1,49 @@
+backend/
+├── src/
+│   ├── config/
+│   │   ├── database.js          // Prisma client singleton
+│   │   ├── cloudinary.js        // File upload config
+│   │   └── constants.js         // App constants
+│   ├── middleware/
+│   │   ├── auth.js              // JWT verification
+│   │   ├── errorHandler.js     // Centralized error handling
+│   │   ├── rateLimiter.js       // Rate limiting
+│   │   ├── validator.js         // Request validation
+│   │   └── upload.js            // Multer configuration
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── profile.routes.js
+│   │   ├── links.routes.js
+│   │   ├── public.routes.js
+│   │   └── analytics.routes.js
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── profile.controller.js
+│   │   ├── links.controller.js
+│   │   ├── public.controller.js
+│   │   └── analytics.controller.js
+│   ├── services/
+│   │   ├── auth.service.js      // Business logic
+│   │   ├── profile.service.js
+│   │   ├── links.service.js
+│   │   ├── upload.service.js
+│   │   └── analytics.service.js
+│   ├── utils/
+│   │   ├── jwt.js
+│   │   ├── password.js
+│   │   ├── validation.js
+│   │   └── errors.js            // Custom error classes
+│   ├── app.js                   // Express app setup
+│   └── server.js                // Server entry point
+├── prisma/
+│   ├── schema.prisma
+│   ├── migrations/
+│   └── seed.js
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── setup.js
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md

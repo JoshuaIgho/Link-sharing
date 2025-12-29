@@ -47,9 +47,9 @@ model Link {
   url           String
   description   String?
   iconUrl       String?   @map("icon_url")
-  platformIcon  String?   @map("platform_icon")  // NEW: Font Awesome icon class
-  platformColor String?   @map("platform_color") // NEW: Platform color
-  platform      String?                          // NEW: Platform ID
+  platformIcon  String?   @map("platform_icon")  // Font Awesome class
+  platformColor String?   @map("platform_color") // Platform color
+  platform      String?                          // Platform ID
   isActive      Boolean   @default(true) @map("is_active")
   position      Int
   clickCount    Int       @default(0) @map("click_count")

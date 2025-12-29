@@ -1,0 +1,85 @@
+frontend/
+├── public/
+│   ├── favicon.ico
+│   └── robots.txt
+├── src/
+│   ├── assets/
+│   │   ├── icons/
+│   │   └── images/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Input.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   ├── Toast.jsx
+│   │   │   ├── Loading.jsx
+│   │   │   ├── ErrorBoundary.jsx
+│   │   │   └── Avatar.jsx
+│   │   ├── auth/
+│   │   │   ├── LoginForm.jsx
+│   │   │   ├── RegisterForm.jsx
+│   │   │   └── ProtectedRoute.jsx
+│   │   ├── dashboard/
+│   │   │   ├── DashboardLayout.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── Header.jsx
+│   │   │   └── Stats.jsx
+│   │   ├── profile/
+│   │   │   ├── ProfileEditor.jsx
+│   │   │   ├── AvatarUpload.jsx
+│   │   │   ├── ThemePicker.jsx
+│   │   │   └── UsernameChecker.jsx
+│   │   ├── links/
+│   │   │   ├── LinkList.jsx
+│   │   │   ├── LinkItem.jsx
+│   │   │   ├── LinkForm.jsx
+│   │   │   ├── DraggableLink.jsx
+│   │   │   └── LinkIconUpload.jsx
+│   │   ├── public-profile/
+│   │   │   ├── PublicProfileView.jsx
+│   │   │   ├── PublicLinkCard.jsx
+│   │   │   └── ProfileHeader.jsx
+│   │   └── analytics/
+│   │       ├── AnalyticsDashboard.jsx
+│   │       ├── ViewsChart.jsx
+│   │       └── LinkPerformance.jsx
+│   ├── contexts/
+│   │   ├── AuthContext.jsx
+│   │   ├── ProfileContext.jsx
+│   │   └── ThemeContext.jsx
+│   ├── hooks/
+│   │   ├── useAuth.js
+│   │   ├── useProfile.js
+│   │   ├── useLinks.js
+│   │   ├── useDebounce.js
+│   │   ├── useToast.js
+│   │   └── useAnalytics.js
+│   ├── services/
+│   │   ├── api.js              // Axios instance
+│   │   ├── auth.service.js
+│   │   ├── profile.service.js
+│   │   ├── links.service.js
+│   │   └── analytics.service.js
+│   ├── utils/
+│   │   ├── validation.js
+│   │   ├── constants.js
+│   │   ├── formatters.js
+│   │   └── storage.js          // localStorage wrapper
+│   ├── pages/
+│   │   ├── Landing.jsx
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── ProfileSettings.jsx
+│   │   ├── LinksManager.jsx
+│   │   ├── Analytics.jsx
+│   │   ├── PublicProfile.jsx
+│   │   └── NotFound.jsx
+│   ├── App.jsx
+│   ├── index.js
+│   └── index.css
+├── .env.example
+├── .gitignore
+├── package.json
+├── tailwind.config.js
+└── README.md

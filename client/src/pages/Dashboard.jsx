@@ -101,7 +101,7 @@ const Dashboard = () => {
       <div className="card bg-gradient-to-r from-primary-50 to-purple-50 border-primary-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">💡 Pro Tip</h3>
         <p className="text-gray-700">
-          Add custom icons to your links to make them stand out and increase click-through rates!
+          Add custom icons to your custom links to make them stand out and increase click-through rates!
         </p>
       </div>
     </div>
