@@ -1,0 +1,67 @@
+### Health Check
+GET http://localhost:5000/health
+
+### Register User
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Password123",
+  "username": "testuser"
+}
+
+### Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Password123"
+}
+
+### Get Current User (Replace TOKEN)
+GET http://localhost:5000/api/auth/me
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### Get Profile
+GET http://localhost:5000/api/profile
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### Update Profile
+PUT http://localhost:5000/api/profile
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "displayName": "Test User",
+  "bio": "This is my bio",
+  "themeColor": "#3b82f6"
+}
+
+### Create Link
+POST http://localhost:5000/api/links
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "title": "My GitHub",
+  "url": "https://github.com/testuser",
+  "description": "Check out my code"
+}
+
+### Get All Links
+GET http://localhost:5000/api/links
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### Get Public Profile
+GET http://localhost:5000/api/public/testuser
+
+### Get Analytics Overview
+GET http://localhost:5000/api/analytics/overview
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+
+
+
+ 

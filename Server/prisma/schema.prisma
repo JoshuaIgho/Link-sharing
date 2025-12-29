@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  profile       Profile?
+  
+  @@map("users")
+}
+
+model Profile {
+  id            String    @id @default(cuid())
+  userId        String    @unique @map("user_id")
+  username      String    @unique
+  displayName   String?   @map("display_name")
+  bio           String?   @db.Text
+  avatarUrl     String?   @map("avatar_url")
+  themeColor    String    @default("#6366f1") @map("theme_color")
+  isPublic      Boolean   @default(true) @map("is_public")
+  viewCount     Int       @default(0) @map("view_count")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links         Link[]
+  analytics     Analytics[]
+  
+  @@index([username])
+  @@map("profiles")
+}
+
+model Link {
+  id            String    @id @default(cuid())
+  profileId     String    @map("profile_id")
+  title         String
+  url           String
+  description   String?
+  iconUrl       String?   @map("icon_url")
+  platformIcon  String?   @map("platform_icon")  // NEW: Font Awesome icon class
+  platformColor String?   @map("platform_color") // NEW: Platform color
+  platform      String?                          // NEW: Platform ID
+  isActive      Boolean   @default(true) @map("is_active")
+  position      Int
+  clickCount    Int       @default(0) @map("click_count")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  profile       Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  @@index([profileId, position])
+  @@map("links")
+}
+
+model Analytics {
+  id            String    @id @default(cuid())
+  profileId     String    @map("profile_id")
+  event         String
+  linkId        String?   @map("link_id")
+  userAgent     String?   @map("user_agent")
+  ipAddress     String?   @map("ip_address")
+  referrer      String?
+  country       String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  
+  profile       Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  @@index([profileId, createdAt])
+  @@index([linkId])
+  @@map("analytics")
+}
