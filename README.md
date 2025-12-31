@@ -1,5 +1,8 @@
 # LinkShare
 
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)](#)
+[![Deploy](https://img.shields.io/badge/Deploy-vercel-green)](#)
+
 LinkShare is a modern link-in-bio and link-sharing web app — create a single public profile page that aggregates your links, social platforms, and analytics.
 
 ---
@@ -70,12 +73,6 @@ cp client/.env.example client/.env
 cp Server/.env.example Server/.env
 ```
 
-Note: .env files are ignored by git (see `.gitignore`). If any `.env` files were previously tracked, run:
-```bash
-git rm --cached Server/.env client/.env
-git commit -m "chore: stop tracking .env files"
-```
-
 ---
 
 ## Running in development
@@ -112,31 +109,14 @@ Serve the build using your preferred static host. Backend build/production steps
 ## Important implementation notes & troubleshooting
 
 - React 19 compatibility:
-  - Some libraries (e.g., `react-helmet-async` older versions) might not list React 19 in peer deps. You can either:
-    - Use a local Head component that manipulates document.title/meta (implemented under `client/src/pages/Head.jsx`) to avoid installing `react-helmet-async`, or
-    - Install with `--legacy-peer-deps` if you accept ignoring peer constraints:
-      `npm install react-helmet-async --legacy-peer-deps`
+  - Some libraries (e.g., `react-helmet-async`) might not list React 19 in peer deps. To avoid conflicts, this project uses a tiny Head component that manipulates document.title/meta directly.
+  - Or install packages ignoring peer constraints: `npm install <pkg> --legacy-peer-deps`.
 
 - Mobile menu clipping:
-  - If a fixed mobile menu is nested inside an element with `backdrop-filter`, `filter`, or `transform`, the browser may clip fixed children. The app uses a portal (render to `document.body`) for the mobile menu to avoid clipping.
+  - Fixed menus can be clipped when nested under elements with `backdrop-filter`, `filter`, or `transform`. The app renders the mobile menu into document.body (portal) to avoid clipping.
 
 - Social platforms:
-  - There is a small curated platform list with matching rules and icons. Users can add custom platforms when not found.
-
----
-
-## Tests & linting
-
-- Run tests (if present):
-  ```bash
-  cd client
-  npm test
-  ```
-- Lint:
-  ```bash
-  cd client
-  npm run lint
-  ```
+  - Curated platform list with matching rules and icons; custom platforms allowed.
 
 ---
 
@@ -144,20 +124,16 @@ Serve the build using your preferred static host. Backend build/production steps
 
 - Fork the repo and open a PR with focused changes.
 - Follow existing code style (Tailwind utility classes, functional components).
-- Suggested commit message for bulk cleanup:
-  ```
-  chore: cleanup & fixes — ignore .env, fix header mobile menu, replace react-helmet-async
-  ```
 
 ---
 
-## License
+## Environment files
 
-Specify your license here (e.g., MIT). Add `LICENSE` file in repo root.
+Example env files are included:
+- client/.env.example
+- Server/.env.example
+
+Copy and fill the values before running.
 
 ---
 
-If you'd like, I can:
-- Add a production-ready `README` badge section (deploy, CI),
-- Create `.env.example` files for client & server,
-- Add more platform icons or implement react-hook-form integration for the link form.
