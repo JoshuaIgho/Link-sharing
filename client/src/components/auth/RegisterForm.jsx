@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import Input from '../common/Input';
@@ -20,36 +20,46 @@ const RegisterForm = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear errors when user types
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+    if (serverError) {
+      setServerError('');
     }
   };
 
   const validate = () => {
     const newErrors = {};
 
+    // Email validation
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Invalid email format';
+      newErrors.email = 'Please enter a valid email address';
     }
 
+    // Username validation
     if (!formData.username) {
       newErrors.username = 'Username is required';
     } else if (!validateUsername(formData.username)) {
       newErrors.username = 'Username must be 3-30 characters (letters, numbers, _ or -)';
     }
 
+    // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (!validatePassword(formData.password)) {
       newErrors.password = 'Password must be at least 8 characters';
     }
 
+    // Confirm password validation
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
@@ -62,6 +72,7 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError('');
 
     if (!validate()) return;
 
@@ -69,10 +80,25 @@ const RegisterForm = () => {
 
     try {
       await register(formData.email, formData.password, formData.username);
-      toast.success('Account created successfully!');
+      toast.success('Account created successfully! Welcome to LinkShare 🎉');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      console.error('Registration error:', error);
+      
+      // Handle specific error messages from backend
+      const errorMessage = error.response?.data?.message || error.message;
+      
+      if (errorMessage.toLowerCase().includes('email')) {
+        setErrors((prev) => ({ ...prev, email: 'This email is already registered' }));
+        setServerError('An account with this email already exists. Please sign in instead.');
+      } else if (errorMessage.toLowerCase().includes('username')) {
+        setErrors((prev) => ({ ...prev, username: 'This username is already taken' }));
+        setServerError('Username is already taken. Please choose another one.');
+      } else {
+        setServerError(errorMessage || 'Registration failed. Please try again.');
+      }
+      
+      toast.error(errorMessage || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -80,6 +106,16 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Server Error Message */}
+      {serverError && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3 animate-slide-down">
+          <AlertCircle size={20} className="flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium text-sm">{serverError}</p>
+          </div>
+        </div>
+      )}
+
       <Input
         label="Email"
         type="email"
@@ -90,6 +126,7 @@ const RegisterForm = () => {
         icon={Mail}
         placeholder="you@example.com"
         autoComplete="email"
+        disabled={loading}
       />
 
       <Input
@@ -102,6 +139,8 @@ const RegisterForm = () => {
         icon={User}
         placeholder="johndoe"
         autoComplete="username"
+        helperText="This will be your unique profile URL"
+        disabled={loading}
       />
 
       <Input
@@ -114,6 +153,8 @@ const RegisterForm = () => {
         icon={Lock}
         placeholder="••••••••"
         autoComplete="new-password"
+        helperText="At least 8 characters"
+        disabled={loading}
       />
 
       <Input
@@ -126,10 +167,11 @@ const RegisterForm = () => {
         icon={Lock}
         placeholder="••••••••"
         autoComplete="new-password"
+        disabled={loading}
       />
 
-      <Button type="submit" loading={loading} fullWidth>
-        Create Account
+      <Button type="submit" loading={loading} fullWidth disabled={loading}>
+        {loading ? 'Creating Account...' : 'Create Account'}
       </Button>
 
       <p className="text-center text-sm text-gray-600">

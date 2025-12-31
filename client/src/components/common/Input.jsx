@@ -6,6 +6,7 @@ const Input = ({
   helperText,
   icon: Icon,
   className = '',
+  disabled = false,
   ...props
 }) => {
   return (
@@ -24,13 +25,19 @@ const Input = ({
         )}
         
         <input
-          className={`input ${Icon ? 'pl-10' : ''} ${error ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
+          className={`input ${Icon ? 'pl-10' : ''} ${error ? 'border-red-500 focus:ring-red-500' : ''} ${
+            disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''
+          } ${className}`}
+          disabled={disabled}
           {...props}
         />
       </div>
       
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+          <span>⚠️</span>
+          {error}
+        </p>
       )}
       
       {helperText && !error && (
