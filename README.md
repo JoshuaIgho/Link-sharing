@@ -1,139 +1,317 @@
-# LinkShare
+# 🔗 LinkShare
 
-[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)](#)
-[![Deploy](https://img.shields.io/badge/Deploy-vercel-green)](#)
+> **One Link for Everything You Are**
 
-LinkShare is a modern link-in-bio and link-sharing web app — create a single public profile page that aggregates your links, social platforms, and analytics.
+A modern, full-stack link-in-bio platform that helps creators, entrepreneurs, and brands share all their important links through a single, beautiful page. Built with React, Node.js, Express, and PostgreSQL.
 
----
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://linkshare-mocha.vercel.app/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## Key features
 
-- Public profile pages (linkshare.app/username)
-- Unlimited links per profile
-- Per-link scheduling, analytics (views, clicks, CTR)
-- Mobile-first, responsive UI with Tailwind CSS
-- Social platform icons + manual custom platforms
-- Easy onboarding: register, add links, customize
-- Simple server API and React client
+## ✨ Features
 
----
+### 🎨 **Beautiful & Customizable**
+- Fully responsive design optimized for all devices
+- Custom theme colors and branding
+- Profile customization (avatar, bio, display name)
+- Font Awesome social media icons (30+ platforms)
+- Clean, modern UI with smooth animations
 
-## Tech stack
+### 🔗 **Powerful Link Management**
+- Unlimited links with no restrictions
+- Drag-and-drop reordering
+- Enable/disable links on the fly
+- Custom icons and thumbnails
+- Link descriptions and metadata
+- Platform-specific icons (GitHub, Instagram, LinkedIn, etc.)
 
-- Frontend: React 19, Tailwind CSS, lucide-react icons
-- Backend: Node.js / Express (Server folder)
-- Dev tools: npm, ESLint, Prettier
-- Tested on macOS (developer instructions assume macOS)
+### 📊 **Analytics & Insights**
+- Real-time click tracking
+- Profile view counter
+- Link performance metrics
+- 30-day analytics overview
+- Click-through rate (CTR) tracking
 
----
+### 🔐 **Secure & Reliable**
+- JWT authentication with refresh tokens
+- Password hashing with bcrypt
+- Rate limiting and security headers
+- Input validation and sanitization
+- Protected API routes
 
-## Repo structure
+### 🚀 **Developer-Friendly**
+- RESTful API design
+- Clean code architecture
+- Comprehensive error handling
+- Easy deployment
+- Environment-based configuration
 
-- /client — React app (frontend)
-- /Server — Node/Express API (backend)
-- /README.md — this file
-- /.gitignore — common ignores (includes `.env*`)
+## 🛠️ Tech Stack
 
----
+### Frontend
+- **React 19** - Modern UI library
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **Axios** - HTTP client
+- **@dnd-kit** - Drag and drop functionality
+- **React Hot Toast** - Beautiful notifications
+- **Lucide React** - Icon library
+- **Font Awesome** - Social media icons
+- **Vite** - Lightning-fast build tool
 
-## Prerequisites
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **PostgreSQL** - Relational database
+- **Prisma ORM** - Database toolkit
+- **JWT** - Authentication
+- **Bcrypt** - Password hashing
+- **Cloudinary** - Image hosting & optimization
+- **Multer** - File upload handling
+- **Helmet** - Security middleware
+- **Express Rate Limit** - Rate limiting
 
-- Node.js 18+ / npm
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+- Node.js (v18 or higher)
+- PostgreSQL (v14 or higher)
+- npm or yarn
 - Git
 
----
+## 🚀 Quick Start
 
-## Local setup
-
-Clone repo and install dependencies:
-
+### 1. Clone the Repository
 ```bash
-git clone <repo-url>
-cd "Link sharing project"
+git clone https://github.com/yourusername/linkshare.git
+cd linkshare
 ```
 
-Install frontend and backend dependencies:
-
+### 2. Backend Setup
 ```bash
-# client
-cd client
-npm install
-
-# server
-cd ../Server
+cd backend
 npm install
 ```
 
-Create environment files from examples:
+Create `.env` file:
+```env
+NODE_ENV=development
+PORT=5000
 
-```bash
-# create .env in client and server from .env.example
-cp client/.env.example client/.env
-cp Server/.env.example Server/.env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/linkshare?schema=public"
+
+# JWT Secrets (use strong random strings)
+JWT_ACCESS_SECRET=your-super-secret-access-key-min-32-characters-long
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-min-32-characters-long
+
+# Cloudinary (get free account at cloudinary.com)
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+
+# Frontend URL
+FRONTEND_URL=http://localhost:5173
 ```
 
----
-
-## Running in development
-
-Start backend and frontend (from repo root or separate terminals):
-
+Run database migrations:
 ```bash
-# server
-cd Server
+npx prisma migrate dev
+npx prisma generate
+```
+
+Start backend server:
+```bash
 npm run dev
+```
 
-# client
-cd ../client
+Backend will run on `http://localhost:5000`
+
+### 3. Frontend Setup
+```bash
+cd ../frontend
+npm install
+```
+
+Create `.env` file:
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_PUBLIC_URL=http://localhost:5173
+```
+
+Start frontend development server:
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000 (or the port shown by your dev server).
+Frontend will run on `http://localhost:5173`
 
----
+### 4. Open Your Browser
 
-## Build & deploy
+Visit `http://localhost:5173` and start building your LinkShare page! 🎉
 
-Build the client:
-
-```bash
-cd client
-npm run build
+## 📁 Project Structure
+```
+linkshare/
+├── backend/
+│   ├── src/
+│   │   ├── config/           # Configuration files
+│   │   ├── controllers/      # Route controllers
+│   │   ├── middleware/       # Express middleware
+│   │   ├── routes/           # API routes
+│   │   ├── services/         # Business logic
+│   │   ├── utils/            # Helper functions
+│   │   ├── app.js            # Express app setup
+│   │   └── server.js         # Server entry point
+│   ├── prisma/
+│   │   ├── schema.prisma     # Database schema
+│   │   └── migrations/       # Database migrations
+│   ├── .env.example          # Environment variables template
+│   └── package.json
+│
+└── frontend/
+    ├── src/
+    │   ├── components/       # React components
+    │   │   ├── auth/         # Authentication components
+    │   │   ├── common/       # Reusable components
+    │   │   ├── dashboard/    # Dashboard components
+    │   │   ├── links/        # Link management
+    │   │   ├── profile/      # Profile components
+    │   │   └── public-profile/ # Public profile view
+    │   ├── contexts/         # React Context providers
+    │   ├── hooks/            # Custom React hooks
+    │   ├── pages/            # Page components
+    │   ├── services/         # API services
+    │   ├── utils/            # Utility functions
+    │   ├── App.jsx           # Main App component
+    │   └── main.jsx          # React entry point
+    ├── .env.example          # Environment variables template
+    └── package.json
 ```
 
-Serve the build using your preferred static host. Backend build/production steps depend on your deployment target (e.g., Heroku, DigitalOcean, Docker).
+## 🔌 API Endpoints
 
----
+### Authentication
+```
+POST   /api/auth/register          Register new user
+POST   /api/auth/login             Login user
+POST   /api/auth/refresh           Refresh access token
+GET    /api/auth/me                Get current user [Protected]
+```
 
-## Important implementation notes & troubleshooting
+### Profile
+```
+GET    /api/profile                Get user profile [Protected]
+PUT    /api/profile                Update profile [Protected]
+POST   /api/profile/avatar         Upload avatar [Protected]
+DELETE /api/profile/avatar         Delete avatar [Protected]
+GET    /api/profile/availability/:username  Check username availability
+```
 
-- React 19 compatibility:
-  - Some libraries (e.g., `react-helmet-async`) might not list React 19 in peer deps. To avoid conflicts, this project uses a tiny Head component that manipulates document.title/meta directly.
-  - Or install packages ignoring peer constraints: `npm install <pkg> --legacy-peer-deps`.
+### Links
+```
+GET    /api/links                  Get all links [Protected]
+POST   /api/links                  Create link [Protected]
+PUT    /api/links/:id              Update link [Protected]
+DELETE /api/links/:id              Delete link [Protected]
+POST   /api/links/:id/icon         Upload link icon [Protected]
+PUT    /api/links/reorder          Reorder links [Protected]
+PUT    /api/links/:id/toggle       Toggle link active status [Protected]
+```
 
-- Mobile menu clipping:
-  - Fixed menus can be clipped when nested under elements with `backdrop-filter`, `filter`, or `transform`. The app renders the mobile menu into document.body (portal) to avoid clipping.
+### Public
+```
+GET    /api/public/:username       Get public profile
+POST   /api/public/:username/links/:linkId/click  Track link click
+```
 
-- Social platforms:
-  - Curated platform list with matching rules and icons; custom platforms allowed.
+### Analytics
+```
+GET    /api/analytics/overview     Get analytics overview [Protected]
+GET    /api/analytics/links        Get link performance [Protected]
+```
 
----
+## 🌐 Deployment
 
-## Contributing
+### Backend (Render)
 
-- Fork the repo and open a PR with focused changes.
-- Follow existing code style (Tailwind utility classes, functional components).
+1. Create a new Web Service on [Render](https://render.com)
+2. Connect your GitHub repository
+3. Configure:
+   - **Build Command**: `npm install && npx prisma generate`
+   - **Start Command**: `npm start`
+4. Add environment variables from `.env.example`
+5. Create a PostgreSQL database on Render or use [Neon](https://neon.tech)
+6. Run migrations: `npx prisma migrate deploy`
 
----
+### Frontend (Vercel)
 
-## Environment files
+1. Create a new project on [Vercel](https://vercel.com)
+2. Connect your GitHub repository
+3. Configure:
+   - **Framework Preset**: Vite
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Add environment variables:
+```
+   VITE_API_URL=https://your-backend-url.com/api
+   VITE_PUBLIC_URL=https://your-frontend-url.com
+```
+5. Add redirect rule in `vercel.json`:
+```json
+   {
+     "rewrites": [
+       { "source": "/(.*)", "destination": "/index.html" }
+     ]
+   }
+```
 
-Example env files are included:
-- client/.env.example
-- Server/.env.example
+### Frontend (Netlify Alternative)
 
-Copy and fill the values before running.
+Create `netlify.toml`:
+```toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
 
----
+## 🎨 Customization
+
+### Add More Social Platforms
+
+Edit `frontend/src/utils/platforms.js`:
+```javascript
+export const SOCIAL_PLATFORMS = [
+  { id: 'yourplatform', name: 'Your Platform', icon: 'fa-brands fa-youricon', color: '#HEXCOLOR' },
+  // ... existing platforms
+];
+```
+
+### Change Theme Colors
+
+Edit `frontend/tailwind.config.js`:
+```javascript
+theme: {
+  extend: {
+    colors: {
+      primary: {
+        // Your custom colors
+      },
+    },
+  },
+}
+```
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community amazing! Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
 
