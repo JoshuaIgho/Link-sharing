@@ -5,6 +5,7 @@ import LinkForm from '../components/links/LinkForm';
 import Modal from '../components/common/Modal';
 import Button from '../components/common/Button';
 import Loading from '../components/common/Loading';
+import EmptyState from '../components/common/EmptyState';
 import { linksService } from '../services/links.service';
 import { useToast } from '../hooks/useToast';
 import { useProfile } from '../contexts/ProfileContext';
@@ -56,7 +57,6 @@ const handleSubmit = async (formData) => {
         platform: formData.platform,
       };
 
-      console.log('📝 Updating link with data:', updateData);
       const updatedLink = await linksService.updateLink(editingLink.id, updateData);
 
       // Upload icon if provided
@@ -79,7 +79,6 @@ const handleSubmit = async (formData) => {
         platform: formData.platform,
       };
 
-      console.log('➕ Creating link with data:', createData);
       const newLink = await linksService.createLink(createData);
 
       // Upload icon if provided
@@ -156,14 +155,24 @@ const handleSubmit = async (formData) => {
 
       {/* Links List */}
       <div className="mb-8">
-        <LinkList
-          links={links}
-          onReorder={handleReorder}
-          onEdit={handleOpenModal}
-          onDelete={handleDelete}
-          onToggle={handleToggle}
-          onAddClick={() => handleOpenModal()}
-        />
+        {links.length > 0 ? (
+          <LinkList
+            links={links}
+            onReorder={handleReorder}
+            onEdit={handleOpenModal}
+            onDelete={handleDelete}
+            onToggle={handleToggle}
+            onAddClick={() => handleOpenModal()}
+          />
+        ) : (
+          <EmptyState
+            icon={Plus}
+            title="No links yet"
+            description="Start building your profile by adding your first link. You can add social media, portfolio, or any other URL."
+            actionText="Add Your First Link"
+            onAction={() => handleOpenModal()}
+          />
+        )}
       </div>
 
       {/* Link Form Modal */}

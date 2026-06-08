@@ -13,8 +13,6 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = storage.getToken();
-    console.log('📤 API Request:', config.method.toUpperCase(), config.url);
-    console.log('🔑 Token:', token ? `${token.substring(0, 20)}...` : 'MISSING');
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -30,7 +28,6 @@ api.interceptors.request.use(
 // Response interceptor - Handle token refresh
 api.interceptors.response.use(
   (response) => {
-    console.log('✅ API Response:', response.config.url, response.status);
     return response;
   },
   async (error) => {
@@ -49,14 +46,12 @@ api.interceptors.response.use(
           throw new Error('No refresh token');
         }
 
-        console.log('🔄 Attempting token refresh...');
         const response = await axios.post(`${API_URL}/auth/refresh`, {
           refreshToken,
         });
 
         const { accessToken } = response.data.data;
         storage.setToken(accessToken);
-        console.log('✅ Token refreshed successfully');
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);

@@ -4,7 +4,10 @@ import { Plus, TrendingUp } from 'lucide-react';
 import Stats from '../components/dashboard/Stats';
 import Button from '../components/common/Button';
 import Loading from '../components/common/Loading';
+import { StatsSkeleton } from '../components/common/Skeleton';
+import OnboardingChecklist from '../components/dashboard/OnboardingChecklist';
 import { analyticsService } from '../services/analytics.service';
+import { linksService } from '../services/links.service';
 import { useToast } from '../hooks/useToast';
 import { formatRelativeTime } from '../utils/formatters';
 import { useAuth } from '../hooks/useAuth';
@@ -13,25 +16,39 @@ const Dashboard = () => {
   const { user } = useAuth();
   const toast = useToast();
   const [stats, setStats] = useState(null);
+  const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
+    fetchData();
   }, []);
 
-  const fetchStats = async () => {
+  const fetchData = async () => {
     try {
-      const data = await analyticsService.getOverview();
-      setStats(data);
+      const [statsData, linksData] = await Promise.all([
+        analyticsService.getOverview(),
+        linksService.getLinks()
+      ]);
+      setStats(statsData);
+      setLinks(linksData);
     } catch (error) {
-      toast.error('Failed to load statistics');
+      toast.error('Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return <Loading fullScreen />;
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8 space-y-2">
+          <div className="h-10 w-64 bg-gray-200 rounded animate-pulse" />
+          <div className="h-4 w-48 bg-gray-100 rounded animate-pulse" />
+        </div>
+        <div className="h-48 w-full bg-gray-100 rounded-xl mb-8 animate-pulse" />
+        <StatsSkeleton />
+      </div>
+    );
   }
 
   return (
@@ -45,6 +62,9 @@ const Dashboard = () => {
           Here's what's happening with your links today
         </p>
       </div>
+
+      {/* Onboarding Checklist */}
+      <OnboardingChecklist user={user} links={links} />
 
       {/* Stats */}
       <Stats stats={stats} />

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "postinstall": "prisma generate",
+    "start": "prisma generate && node src/server.js",
     "dev": "nodemon src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

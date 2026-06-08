@@ -36,6 +36,8 @@ Thumbs.db
 *.local
 *.sqlite
 *.sqlite3
+prisma/*.db
+prisma/dev.db
 uploads/
 .env.local
 .env.*.local

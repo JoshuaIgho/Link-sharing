@@ -24,6 +24,31 @@ const getOverview = async (userId) => {
   const profileViews = profile.analytics.filter(a => a.event === 'profile_view').length;
   const linkClicks = profile.analytics.filter(a => a.event === 'link_click').length;
 
+  // Calculate trends for the last 7 days
+  const last7Days = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const dateString = date.toISOString().split('T')[0];
+
+    const dayViews = profile.analytics.filter(a =>
+      a.event === 'profile_view' &&
+      a.createdAt.toISOString().split('T')[0] === dateString
+    ).length;
+
+    const dayClicks = profile.analytics.filter(a =>
+      a.event === 'link_click' &&
+      a.createdAt.toISOString().split('T')[0] === dateString
+    ).length;
+
+    last7Days.push({
+      name: date.toLocaleDateString('en-US', { weekday: 'short' }),
+      date: dateString,
+      views: dayViews,
+      clicks: dayClicks,
+    });
+  }
+
   return {
     totalLinks: profile.links.length,
     activeLinks: profile.links.filter(l => l.isActive).length,
@@ -33,6 +58,7 @@ const getOverview = async (userId) => {
       profileViews,
       linkClicks,
     },
+    trends: last7Days,
   };
 };
 
