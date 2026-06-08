@@ -15,6 +15,20 @@ export const THEME_COLORS = [
   { name: 'Green', value: '#10b981' },
   { name: 'Teal', value: '#14b8a6' },
   { name: 'Cyan', value: '#06b6d4' },
+  { name: 'Slate', value: '#334155' },
+];
+
+export const THEME_PRESETS = [
+  { id: 'minimal', name: 'Minimal', description: 'Clean and simple white background' },
+  { id: 'glass', name: 'Glassmorphism', description: 'Modern frosted glass effect' },
+  { id: 'gradient', name: 'Soft Gradient', description: 'Elegant color transitions' },
+  { id: 'dark', name: 'Deep Dark', description: 'Sophisticated dark mode' },
+];
+
+export const FONT_PRESETS = [
+  { id: 'sans', name: 'Modern Sans', class: 'font-sans' },
+  { id: 'serif', name: 'Elegant Serif', class: 'font-serif' },
+  { id: 'mono', name: 'Clean Mono', class: 'font-mono' },
 ];
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB

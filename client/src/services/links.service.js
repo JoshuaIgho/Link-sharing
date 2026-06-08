@@ -32,14 +32,12 @@ export const linksService = {
   },
 
   reorderLinks: async (linkId, newPosition) => {
-    console.log('📤 Sending reorder request:', { linkId, newPosition });
     
     const response = await api.put('/links/reorder', { 
       linkId, 
       newPosition 
     });
     
-    console.log('✅ Reorder response:', response.data);
     return response.data.data;
   },
 

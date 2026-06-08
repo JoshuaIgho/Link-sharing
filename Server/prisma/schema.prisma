@@ -1,10 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -24,7 +25,7 @@ model Profile {
   userId        String    @unique @map("user_id")
   username      String    @unique
   displayName   String?   @map("display_name")
-  bio           String?   @db.Text
+  bio           String?
   avatarUrl     String?   @map("avatar_url")
   themeColor    String    @default("#6366f1") @map("theme_color")
   isPublic      Boolean   @default(true) @map("is_public")

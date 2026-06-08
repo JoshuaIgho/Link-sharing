@@ -12,14 +12,12 @@ export const profileService = {
   },
 
   uploadAvatar: async (file) => {
-    console.log('📤 Uploading avatar:', file.name, file.type, file.size);
     
     const formData = new FormData();
     formData.append('avatar', file);
     
     // Log FormData contents
     for (let [key, value] of formData.entries()) {
-      console.log('📎 FormData:', key, value);
     }
     
     const response = await api.post('/profile/avatar', formData, {
@@ -28,7 +26,6 @@ export const profileService = {
       },
     });
     
-    console.log('✅ Avatar uploaded successfully');
     return response.data.data;
   },
 
