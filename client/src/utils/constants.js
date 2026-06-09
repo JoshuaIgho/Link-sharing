@@ -1,4 +1,5 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const baseApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const API_URL = baseApiUrl.endsWith('/api') ? baseApiUrl : `${baseApiUrl}/api`;
 export const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL || 'http://localhost:3000';
 
 export const USERNAME_REGEX = /^[a-zA-Z0-9_-]{3,30}$/;
