@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, TrendingUp } from 'lucide-react';
+import { Plus, TrendingUp, QrCode } from 'lucide-react';
 import Stats from '../components/dashboard/Stats';
 import Button from '../components/common/Button';
+import ShareProfileModal from '../components/common/ShareProfileModal';
 import Loading from '../components/common/Loading';
 import { StatsSkeleton } from '../components/common/Skeleton';
 import OnboardingChecklist from '../components/dashboard/OnboardingChecklist';
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -80,6 +82,15 @@ const Dashboard = () => {
                 Create New Link
               </Button>
             </Link>
+            <Button
+              variant="secondary"
+              fullWidth
+              className="justify-start"
+              onClick={() => setShareModalOpen(true)}
+            >
+              <QrCode size={20} className="text-primary-600" />
+              Share & QR Code
+            </Button>
             <Link to="/profile">
               <Button variant="secondary" fullWidth className="justify-start">
                 Edit Profile
@@ -124,6 +135,15 @@ const Dashboard = () => {
           Add custom icons to your custom links to make them stand out and increase click-through rates!
         </p>
       </div>
+
+      {user?.profile?.username && (
+        <ShareProfileModal
+          isOpen={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+          username={user.profile.username}
+          displayName={user.profile.displayName}
+        />
+      )}
     </div>
   );
 };
