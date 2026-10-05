@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PublicLinkCard from './PublicLinkCard';
 import Loading from '../common/Loading';
-import { publicService } from '../../services/public.service';
-import { Eye } from 'lucide-react';
 import Avatar from '../common/Avatar';
+import ShareProfileModal from '../common/ShareProfileModal';
+import { publicService } from '../../services/public.service';
+import { Share2, QrCode } from 'lucide-react';
 
 const PublicProfileView = () => {
   const { username } = useParams();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -21,8 +23,8 @@ const PublicProfileView = () => {
       const data = await publicService.getPublicProfile(username);
       setProfile(data);
       setError(null);
-    } catch (error) {
-      setError(error.response?.data?.message || 'Profile not found');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Profile not found');
     } finally {
       setLoading(false);
     }
@@ -31,8 +33,8 @@ const PublicProfileView = () => {
   const handleLinkClick = async (linkId) => {
     try {
       await publicService.trackLinkClick(username, linkId);
-    } catch (error) {
-      console.error('Failed to track click:', error);
+    } catch (err) {
+      console.error('Failed to track click:', err);
     }
   };
 
@@ -43,10 +45,16 @@ const PublicProfileView = () => {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="text-center">
+        <div className="text-center max-w-md mx-auto card shadow-lg">
           <div className="text-6xl mb-4">😕</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Profile Not Found</h1>
-          <p className="text-gray-600">{error}</p>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <a
+            href="/"
+            className="inline-flex items-center justify-center px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors"
+          >
+            Create Your Own Profile
+          </a>
         </div>
       </div>
     );
@@ -59,12 +67,12 @@ const PublicProfileView = () => {
       case 'gradient':
         return {
           background: `linear-gradient(135deg, ${profile.themeColor}40 0%, ${profile.themeColor}10 100%)`,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
         };
       case 'glass':
         return {
           backgroundImage: `radial-gradient(at 0% 0%, ${profile.themeColor}15 0, transparent 50%), radial-gradient(at 50% 0%, ${profile.themeColor}10 0, transparent 50%)`,
-          backgroundColor: '#f8fafc'
+          backgroundColor: '#f8fafc',
         };
       case 'minimal':
       default:
@@ -74,9 +82,12 @@ const PublicProfileView = () => {
 
   const getFontClass = () => {
     switch (profile.fontPreset) {
-      case 'serif': return 'font-serif';
-      case 'mono': return 'font-mono';
-      default: return 'font-sans';
+      case 'serif':
+        return 'font-serif';
+      case 'mono':
+        return 'font-mono';
+      default:
+        return 'font-sans';
     }
   };
 
@@ -85,37 +96,72 @@ const PublicProfileView = () => {
 
   return (
     <div
-      className={`min-h-screen py-12 px-4 transition-colors duration-500 ${fontClass} ${profile.themePreset === 'dark' ? 'dark' : ''}`}
+      className={`min-h-screen py-12 px-4 transition-colors duration-500 relative ${fontClass} ${
+        profile.themePreset === 'dark' ? 'dark' : ''
+      }`}
       style={bgStyles}
     >
+      {/* Floating Top Bar / Share Button */}
+      <div className="max-w-2xl mx-auto flex justify-end mb-4">
+        <button
+          onClick={() => setShareModalOpen(true)}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-bold shadow-md transition-all hover:scale-105 ${
+            profile.themePreset === 'dark'
+              ? 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700'
+              : 'bg-white/90 text-gray-800 border border-gray-200 backdrop-blur-md hover:bg-white'
+          }`}
+        >
+          <Share2 size={14} style={{ color: profile.themeColor }} />
+          <span>Share Page</span>
+        </button>
+      </div>
+
       <div className="max-w-2xl mx-auto">
         {/* Profile Header */}
-        <div className={`text-center mb-12 animate-fade-in ${profile.themePreset === 'dark' ? 'text-white' : ''}`}>
+        <div
+          className={`text-center mb-10 animate-fade-in ${
+            profile.themePreset === 'dark' ? 'text-white' : ''
+          }`}
+        >
           <div className="relative inline-block mb-6">
             <Avatar
               src={profile.avatarUrl}
               name={profile.displayName || profile.username}
               size="2xl"
-              className={`mx-auto ring-4 shadow-xl ${profile.themePreset === 'dark' ? 'ring-slate-800' : 'ring-white'}`}
+              className={`mx-auto ring-4 shadow-xl ${
+                profile.themePreset === 'dark' ? 'ring-slate-800' : 'ring-white'
+              }`}
             />
             <div
               className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full border-4 border-white shadow-sm"
               style={{ backgroundColor: profile.themeColor }}
             />
           </div>
-          
-          <h1 className={`text-4xl font-black mb-3 tracking-tight ${profile.themePreset === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+
+          <h1
+            className={`text-4xl font-black mb-2 tracking-tight ${
+              profile.themePreset === 'dark' ? 'text-white' : 'text-gray-900'
+            }`}
+          >
             {profile.displayName || `@${profile.username}`}
           </h1>
-          
+
           {profile.displayName && (
-            <p className={`text-lg font-medium mb-4 ${profile.themePreset === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+            <p
+              className={`text-base font-medium mb-3 ${
+                profile.themePreset === 'dark' ? 'text-slate-400' : 'text-gray-500'
+              }`}
+            >
               @{profile.username}
             </p>
           )}
-          
+
           {profile.bio && (
-            <p className={`max-w-lg mx-auto text-base leading-relaxed ${profile.themePreset === 'dark' ? 'text-slate-300' : 'text-gray-600'}`}>
+            <p
+              className={`max-w-lg mx-auto text-base leading-relaxed ${
+                profile.themePreset === 'dark' ? 'text-slate-300' : 'text-gray-600'
+              }`}
+            >
               {profile.bio}
             </p>
           )}
@@ -127,7 +173,11 @@ const PublicProfileView = () => {
             profile.links.map((link, index) => (
               <div
                 key={link.id}
-                className={profile.themePreset === 'glass' ? 'backdrop-blur-md bg-white/40 rounded-2xl shadow-sm border border-white/50 overflow-hidden hover:scale-[1.02] transition-transform' : ''}
+                className={
+                  profile.themePreset === 'glass'
+                    ? 'backdrop-blur-md bg-white/40 rounded-2xl shadow-sm border border-white/50 overflow-hidden hover:scale-[1.02] transition-transform'
+                    : ''
+                }
               >
                 <PublicLinkCard
                   link={link}
@@ -135,9 +185,13 @@ const PublicProfileView = () => {
                   onClick={() => handleLinkClick(link.id)}
                   style={{
                     animationDelay: `${index * 0.1}s`,
-                    backgroundColor: profile.themePreset === 'dark' ? '#1e293b' : undefined,
-                    border: profile.themePreset === 'dark' ? '1px solid #334155' : undefined,
-                    color: profile.themePreset === 'dark' ? '#f1f5f9' : undefined
+                    backgroundColor:
+                      profile.themePreset === 'dark' ? '#1e293b' : undefined,
+                    border:
+                      profile.themePreset === 'dark'
+                        ? '1px solid #334155'
+                        : undefined,
+                    color: profile.themePreset === 'dark' ? '#f1f5f9' : undefined,
                   }}
                 />
               </div>
@@ -153,7 +207,8 @@ const PublicProfileView = () => {
         <div className="text-center mt-12 text-sm text-gray-500">
           <p>
             Powered by{' '}
-             <a href="/"
+            <a
+              href="/"
               className="font-medium hover:text-gray-900"
               style={{ color: profile.themeColor }}
             >
@@ -162,6 +217,16 @@ const PublicProfileView = () => {
           </p>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {profile && (
+        <ShareProfileModal
+          isOpen={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+          username={profile.username}
+          displayName={profile.displayName}
+        />
+      )}
     </div>
   );
 };
